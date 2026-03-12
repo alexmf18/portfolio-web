@@ -101,9 +101,15 @@ const toggleAllProjects = async () => {
 
   if (showAllProjects.value) {
     await nextTick();
-    allProjectsWrapRef.value?.scrollIntoView({
+    const headerOffset = 110;
+    const targetY =
+      allProjectsWrapRef.value.getBoundingClientRect().top +
+      window.scrollY -
+      headerOffset;
+
+    window.scrollTo({
+      top: targetY,
       behavior: "smooth",
-      block: "start",
     });
   }
 };
@@ -203,7 +209,7 @@ const currentYear = new Date().getFullYear();
               <li><span>UBICACION</span>Vallirana, BCN</li>
               <li><span>TELEFONO</span>+34 602 106 614</li>
               <li><span>EMAIL</span>alexmf188@gmail.com</li>
-              <li><span>EXPERIENCE</span>7+ Años de experiencia</li>
+              <li><span>EXPERIENCIA</span>7+ Años de experiencia</li>
               <li>
                 <a
                   :href="heroSocialLinks[0].href"
@@ -287,11 +293,7 @@ const currentYear = new Date().getFullYear();
           <div>
             <h2 class="projects-title">Projectos Destacados</h2>
           </div>
-          <button
-            class="view-link"
-            type="button"
-            @click="toggleAllProjects"
-          >
+          <button class="view-link" type="button" @click="toggleAllProjects">
             {{ showAllProjects ? "SHOW LESS" : "VIEW ALL" }}
           </button>
         </div>
