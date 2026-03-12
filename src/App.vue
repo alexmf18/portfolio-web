@@ -1,5 +1,5 @@
 ﻿<script setup>
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 
 const navLinks = [
   { name: "SOBRE MI", href: "#about" },
@@ -94,6 +94,19 @@ const featuredProjects = allProjects.slice(0, 2);
 const projectFilters = ["TODOS", "React", "JS", "CSS"];
 const showAllProjects = ref(false);
 const selectedFilter = ref("TODOS");
+const allProjectsWrapRef = ref(null);
+
+const toggleAllProjects = async () => {
+  showAllProjects.value = !showAllProjects.value;
+
+  if (showAllProjects.value) {
+    await nextTick();
+    allProjectsWrapRef.value?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+};
 
 const filteredProjects = computed(() =>
   selectedFilter.value === "TODOS"
@@ -277,7 +290,7 @@ const currentYear = new Date().getFullYear();
           <button
             class="view-link"
             type="button"
-            @click="showAllProjects = !showAllProjects"
+            @click="toggleAllProjects"
           >
             {{ showAllProjects ? "SHOW LESS" : "VIEW ALL" }}
           </button>
@@ -312,7 +325,11 @@ const currentYear = new Date().getFullYear();
         </div>
 
         <transition name="fade-slide">
-          <div v-if="showAllProjects" class="all-projects-wrap">
+          <div
+            v-if="showAllProjects"
+            ref="allProjectsWrapRef"
+            class="all-projects-wrap"
+          >
             <div class="project-filters">
               <button
                 v-for="filter in projectFilters"
