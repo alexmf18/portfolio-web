@@ -88,10 +88,20 @@ const allProjects = [
     tag: "Finanzapp",
     url: "https://alexmf18.github.io/finanzapp/",
   },
+  {
+    id: 7,
+    category: "Vue.js",
+    year: "TAILWIND · THREE.JS · VUE.JS",
+    title: "Planetarium",
+    description:
+      "Website para un planetario 3D, con un diseño moderno y animaciones interactivas de los planetas.",
+    tag: "Planetarium",
+    url: "https://planetarium-flame.vercel.app/",
+  },
 ];
 
 const featuredProjects = allProjects.slice(0, 2);
-const projectFilters = ["TODOS", "React", "JS", "CSS"];
+const projectFilters = ["TODOS", "React", "JS", "CSS", "Vue.js"];
 const showAllProjects = ref(false);
 const selectedFilter = ref("TODOS");
 const allProjectsWrapRef = ref(null);
