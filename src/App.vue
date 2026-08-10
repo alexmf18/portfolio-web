@@ -173,7 +173,7 @@ const currentYear = new Date().getFullYear();
               link.name
             }}</a>
             <a
-              href="/documents/CVitae_Alex_Morcillo_Fulgencio.pdf"
+              href="/documents/CV_Alex_Morcillo_Fulgencio.pdf"
               class="resume-btn"
               download="CV_Alex_Morcillo_Fulgencio.pdf"
             >
