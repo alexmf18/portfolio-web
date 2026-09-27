@@ -1,5 +1,3 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Barlow+Condensed:ital,wght@0,500;0,700;1,700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -20,12 +18,14 @@
     font-size: 16px;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* Keep anchored sections clear of the fixed header (~68px tall) */
+    scroll-padding-top: 5rem;
   }
 
   body {
-    font-family: "Inter", sans-serif;
-    background: #0b0d11;
-    color: #f3f4f6;
+    font-family: theme("fontFamily.body");
+    background: theme("colors.base");
+    color: theme("colors.accent");
     background-image:
       linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
@@ -37,6 +37,33 @@
   a {
     color: inherit;
     text-decoration: none;
+  }
+
+  /* Visible keyboard focus everywhere (mouse clicks don't trigger it) */
+  :focus-visible {
+    outline: 2px solid theme("colors.accent");
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Same sizing as Font Awesome: 1em tall, width from the icon's viewBox */
+  .icon {
+    display: inline-block;
+    height: 1em;
+    width: auto;
+    overflow: visible;
+    vertical-align: -0.125em;
   }
 
   ::-webkit-scrollbar {
@@ -53,7 +80,7 @@
       rgba(243, 244, 246, 0.68),
       rgba(243, 244, 246, 0.38)
     );
-    border: 2px solid #0b0d11;
+    border: 2px solid theme("colors.base");
     border-radius: 999px;
   }
 
@@ -76,11 +103,14 @@
   }
 
   .site-shell {
-    @apply bg-[#0b0d11];
+    @apply bg-base text-accent;
   }
 
   .hero-frame {
-    @apply relative min-h-[100vh] overflow-hidden border-b border-white/10 bg-[#05070b];
+    @apply relative overflow-hidden border-b border-white/10 bg-base;
+    /* svh = height with the mobile address bar visible, so it doesn't jump on scroll */
+    min-height: 100vh;
+    min-height: 100svh;
   }
 
   .hero-image {
@@ -107,8 +137,7 @@
   }
 
   .hero-header {
-    @apply fixed left-0 top-0 z-50 w-full border-b border-white/10;
-    background-color: #0b0d11;
+    @apply fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-base;
   }
 
   .hero-header-inner {
@@ -116,18 +145,35 @@
   }
 
   .brand {
-    @apply text-[12px] font-semibold uppercase tracking-[0.2em];
+    @apply flex h-8 items-center text-[12px] font-semibold uppercase tracking-[0.2em];
   }
 
   .brand-logo {
-    @apply h-8 w-auto;
-    display: block;
-    transform: scale(3);
-    transform-origin: left center;
+    @apply block h-[18px] w-auto;
+  }
+
+  .menu-toggle {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded border border-white/20 bg-black/35 text-[18px] text-white/80 lg:hidden;
+  }
+
+  .mobile-menu {
+    @apply flex flex-col gap-5 border-t border-white/10 px-3 py-5 text-[13px] font-medium tracking-[0.2em] text-white/80 lg:hidden;
+  }
+
+  .mobile-menu .resume-btn {
+    @apply w-fit;
+  }
+
+  .header-actions {
+    @apply flex items-center gap-3 lg:gap-8;
+  }
+
+  .lang-toggle {
+    @apply inline-flex h-9 min-w-9 items-center justify-center rounded border border-white/20 bg-black/35 px-2 text-[12px] font-semibold tracking-[0.12em] text-white/80 hover:text-white;
   }
 
   .nav-links {
-    @apply hidden items-center gap-8 text-[11px] font-medium tracking-[0.2em] text-white/80 md:flex;
+    @apply hidden items-center gap-8 text-[12px] font-medium tracking-[0.2em] text-white/80 lg:flex;
   }
 
   .nav-links a:hover {
@@ -139,16 +185,20 @@
   }
 
   .hero-content {
-    @apply relative z-10 flex min-h-[calc(100vh-82px)] max-w-[700px] flex-col justify-center ml-10 mr-auto md:ml-16;
+    @apply relative z-10 flex w-auto max-w-[840px] flex-col justify-center ml-10 mr-auto md:ml-16;
+    min-height: calc(100vh - 82px);
+    min-height: calc(100svh - 82px);
   }
 
   .inline-chip {
-    @apply mb-7 inline-flex w-fit rounded-full border border-white/25 bg-black/40 px-4 py-2 text-[10px] font-semibold tracking-[0.16em] text-white/80;
+    @apply mb-7 inline-flex w-fit rounded-full border border-white/25 bg-black/40 px-4 py-2 text-[12px] font-semibold tracking-[0.16em] text-white/80;
   }
 
   .hero-title {
-    font-family: "Barlow Condensed", sans-serif;
-    @apply whitespace-nowrap text-[80px] font-bold italic uppercase leading-[0.95] tracking-tight text-white sm:text-[80px];
+    font-family: theme("fontFamily.display");
+    @apply font-bold italic uppercase leading-[0.95] tracking-tight text-white;
+    font-size: clamp(2.75rem, 14vw, 5rem);
+    text-wrap: balance;
     text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
   }
 
@@ -168,10 +218,6 @@
     @apply inline-flex h-9 w-9 items-center justify-center rounded border border-white/20 bg-black/35 text-[18px];
   }
 
-  .hero-scroll {
-    @apply absolute bottom-5 left-1/2 z-10 -translate-x-1/2 text-xl text-white/70;
-  }
-
   .content-section {
     @apply py-16 md:py-24;
   }
@@ -181,7 +227,7 @@
   }
 
   .section-title {
-    font-family: "Barlow Condensed", sans-serif;
+    font-family: theme("fontFamily.display");
     @apply mb-6 flex items-center gap-3 text-[36px] font-medium italic uppercase tracking-wide;
   }
 
@@ -235,7 +281,7 @@
   }
 
   .hobbies-grid div {
-    @apply rounded-lg border border-white/10 bg-white/[0.03] px-4 py-5 text-center text-[11px] tracking-[0.18em] text-white/70;
+    @apply rounded-lg border border-white/10 bg-white/[0.03] px-4 py-5 text-center text-[12px] tracking-[0.18em] text-white/70;
   }
 
   .hobbies-grid span {
@@ -243,24 +289,15 @@
   }
 
   .section-head {
-    @apply mb-7 flex items-end justify-between;
+    @apply mb-7 flex flex-wrap items-end justify-between gap-x-4;
   }
 
-  .section-mini {
-    @apply mb-3 text-[12px] tracking-[0.35em] text-white/60;
-  }
-
-  .projects-title {
-    font-family: "Barlow Condensed", sans-serif;
-    @apply mb-8 flex items-center gap-3 text-[36px] font-medium italic uppercase tracking-wide;
-  }
-  .projects-title::before {
-    content: "";
-    @apply h-px w-8 bg-white/40;
+  .section-head > div {
+    flex: 1 1 12rem;
   }
 
   .view-link {
-    @apply hidden cursor-pointer border-0 bg-transparent text-[12px] tracking-[0.25em] text-white/70 md:inline;
+    @apply mb-6 shrink-0 cursor-pointer border-0 bg-transparent text-[12px] tracking-[0.25em] text-white/70;
   }
 
   .project-grid {
@@ -271,56 +308,29 @@
     @apply relative overflow-hidden rounded border border-white/10 bg-white/[0.03];
   }
 
-  .project-card-link {
-    @apply absolute inset-0 z-10;
+  /* The title link's ::after covers the whole card, so the card stays
+     clickable while screen readers get one link named after the project */
+  .project-card-link::after {
+    content: "";
+    @apply absolute inset-0 z-10 rounded;
+  }
+
+  .project-card-link:focus-visible {
+    outline: none;
+  }
+
+  /* Drawn inside the edge: the card's overflow-hidden would clip it outside */
+  .project-card-link:focus-visible::after {
+    outline: 2px solid theme("colors.accent");
+    outline-offset: -2px;
   }
 
   .project-visual {
-    @apply relative flex h-[280px] items-end justify-center bg-gradient-to-br from-[#6d7077] to-[#2c3039] p-0;
+    @apply relative flex h-[280px] items-end justify-center bg-panel p-0;
   }
 
   .project-visual-image {
     @apply block h-full w-full object-cover;
-  }
-
-  .project-visual.alt {
-    @apply bg-gradient-to-br from-[#d8d9dc] to-[#80838a];
-  }
-
-  .project-label {
-    @apply rounded bg-black/45 px-3 py-1 text-[11px] tracking-[0.18em] text-white/90;
-  }
-
-  .mock-device {
-    @apply mb-3 flex w-[136px] flex-col items-center;
-  }
-
-  .mock-screen {
-    @apply h-[170px] w-[70px] rounded-t-md border-4 border-[#e5e7eb] bg-gradient-to-b from-[#b9bcc3] to-[#646875];
-  }
-
-  .mock-stand {
-    @apply mt-2 h-[22px] w-[36px] bg-[#d8dbe0];
-  }
-
-  .mock-base {
-    @apply mt-2 h-[12px] w-[92px] bg-[#f1f3f5];
-  }
-
-  .mock-poster {
-    @apply flex w-full max-w-[320px] items-end justify-center gap-1;
-  }
-
-  .poster-sheet {
-    @apply h-[230px] flex-1 border border-black/15 bg-[#f0f1f3];
-  }
-
-  .poster-sheet.center {
-    @apply relative h-[250px] bg-white text-center text-[#111];
-  }
-
-  .poster-sheet.center strong {
-    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-semibold;
   }
 
   .project-body {
@@ -328,7 +338,7 @@
   }
 
   .project-body .meta {
-    @apply text-[10px] tracking-[0.18em] text-white/55;
+    @apply text-[12px] uppercase tracking-[0.14em] text-white/55;
   }
 
   .project-body h3 {
@@ -337,10 +347,6 @@
 
   .project-body p {
     @apply mt-2 text-sm text-white/75;
-  }
-
-  .project-body a {
-    @apply mt-4 inline-block text-lg text-white/90;
   }
 
   .project-arrow {
@@ -356,7 +362,7 @@
   }
 
   .filter-chip {
-    @apply rounded border border-white/15 bg-white/[0.03] px-3 py-2 text-[10px] tracking-[0.16em] text-white/75;
+    @apply rounded border border-white/15 bg-white/[0.03] px-3 py-2 text-[12px] tracking-[0.16em] text-white/75;
   }
 
   .filter-chip.active {
@@ -367,8 +373,8 @@
     @apply grid gap-5 md:grid-cols-2;
   }
 
-  .project-card.compact .project-body {
-    @apply p-4;
+  .project-visual.compact {
+    @apply h-[180px];
   }
 
   .fade-slide-enter-active,
@@ -384,28 +390,115 @@
     transform: translateY(8px);
   }
 
+  .connect-panel a:hover {
+    @apply text-white;
+  }
+
+  .experience-layout {
+    @apply grid gap-10 lg:grid-cols-[1fr_360px];
+  }
+
+  .timeline {
+    @apply border-l border-white/15;
+  }
+
+  .timeline-item {
+    @apply relative pb-8 pl-6 last:pb-0;
+  }
+
+  .timeline-item::before {
+    content: "";
+    @apply absolute -left-[5px] top-1.5 h-[9px] w-[9px] rounded-full border border-white/60 bg-base;
+  }
+
+  .timeline-period {
+    @apply text-[12px] tracking-[0.2em] text-white/55;
+  }
+
+  .timeline-title {
+    @apply mt-1 text-[22px] font-light text-white;
+  }
+
+  .timeline-org {
+    @apply text-[13px] font-semibold uppercase tracking-[0.18em] text-white/70;
+  }
+
+  .timeline-tasks {
+    @apply mt-3 list-disc space-y-1.5 pl-5 text-[15px] leading-6 text-white/75 marker:text-white/35;
+  }
+
   .skills-layout {
-    @apply mt-10 grid gap-8 lg:grid-cols-2;
+    @apply grid gap-4 md:grid-cols-2 lg:grid-cols-3;
   }
 
-  .skill-row + .skill-row {
-    @apply mt-10;
+  .skill-group {
+    @apply rounded-lg border border-white/10 bg-white/[0.03] p-5;
   }
 
-  .skill-top {
-    @apply mb-2 flex items-center justify-between text-[15px] tracking-[0.14em] text-white/75;
+  .skill-group-title {
+    @apply mb-4 flex items-center gap-3 text-[12px] tracking-[0.3em] text-white/60;
   }
 
-  .bar {
-    @apply h-[4px] bg-white/20;
+  .skill-chips {
+    @apply flex flex-wrap gap-2;
   }
 
-  .fill {
-    @apply h-full bg-white;
+  .skill-chips li {
+    @apply rounded border border-white/15 px-3 py-1.5 text-[13px] text-white/85;
+  }
+
+  .contact-layout {
+    @apply grid gap-10 lg:grid-cols-[1fr_1.2fr];
+  }
+
+  .contact-intro {
+    @apply text-[18px] leading-8 text-white/85;
+  }
+
+  .contact-or {
+    @apply mt-6 text-[12px] tracking-[0.3em] text-white/60;
+  }
+
+  .contact-links {
+    @apply mt-3 space-y-3 text-[15px];
+  }
+
+  .contact-links a {
+    @apply inline-flex items-center gap-3 text-white/85 hover:text-white;
+  }
+
+  .contact-form {
+    @apply grid gap-5 rounded-lg border border-white/10 bg-white/[0.03] p-5 md:p-6;
+  }
+
+  .contact-form label span {
+    @apply mb-2 block text-[12px] tracking-[0.2em] text-white/60;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    @apply w-full rounded border border-white/15 bg-base px-3 py-2.5 text-[15px] text-accent placeholder:text-white/40 focus:border-white/50;
+  }
+
+  .contact-form textarea {
+    @apply resize-y;
+  }
+
+  /* Off-screen for people, still in the form for bots to fill in */
+  .contact-honeypot {
+    @apply absolute -left-[9999px] h-px w-px opacity-0;
+  }
+
+  .contact-submit {
+    @apply w-fit cursor-pointer bg-transparent hover:bg-white/10 disabled:cursor-wait disabled:opacity-60;
+  }
+
+  .contact-status {
+    @apply min-h-6 text-[14px] text-white/80;
   }
 
   .footer-line {
-    @apply flex flex-col gap-4 py-4 text-[10px] tracking-[0.22em] text-white/65 md:flex-row md:items-center md:justify-between;
+    @apply flex flex-col gap-4 py-4 text-[12px] tracking-[0.22em] text-white/65 md:flex-row md:items-center md:justify-between;
   }
 
   .footer-brand {
@@ -413,10 +506,7 @@
   }
 
   .footer-logo {
-    @apply h-8 w-auto;
-    display: block;
-    transform: scale(2.3);
-    transform-origin: left center;
+    @apply block h-[14px] w-auto;
   }
 
   .footer-line nav {
@@ -424,22 +514,9 @@
   }
 
   @media (max-width: 768px) {
-    .hero-image {
-      object-position: center center;
-    }
-
-    .hero-title {
-      font-size: 72px;
-      white-space: normal;
-    }
-
     .hero-subtitle {
       font-size: 18px;
       line-height: 1.45;
-    }
-
-    .nav-links {
-      display: none;
     }
 
     .project-visual {
