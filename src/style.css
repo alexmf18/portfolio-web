@@ -24,6 +24,10 @@
 
   body {
     font-family: theme("fontFamily.body");
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    caret-color: theme("colors.accent");
+    accent-color: theme("colors.accent");
     background: theme("colors.base");
     color: theme("colors.accent");
     background-image:
@@ -37,6 +41,34 @@
   a {
     color: inherit;
     text-decoration: none;
+  }
+
+  ::selection {
+    background: rgba(243, 244, 246, 0.9);
+    color: theme("colors.base");
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /* One easing for every hover/press: quick start, soft landing */
+  a,
+  button,
+  input,
+  textarea {
+    transition-property:
+      color, background-color, border-color, text-decoration-color, opacity,
+      transform;
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Visible keyboard focus everywhere (mouse clicks don't trigger it) */
@@ -153,15 +185,19 @@
   }
 
   .menu-toggle {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded border border-white/20 bg-black/35 text-[18px] text-white/80 lg:hidden;
+    @apply inline-flex h-9 w-9 items-center justify-center rounded border border-white/20 bg-black/35 text-[18px] text-white/80 hover:border-white/45 hover:text-white active:scale-95 lg:hidden;
   }
 
   .mobile-menu {
-    @apply flex flex-col gap-5 border-t border-white/10 px-3 py-5 text-[13px] font-medium tracking-[0.2em] text-white/80 lg:hidden;
+    @apply flex flex-col gap-2 border-t border-white/10 px-3 py-5 text-[13px] font-medium tracking-[0.2em] text-white/80 lg:hidden;
+  }
+
+  .mobile-menu > a:not(.resume-btn) {
+    @apply py-2 hover:text-white;
   }
 
   .mobile-menu .resume-btn {
-    @apply w-fit;
+    @apply mt-3 w-fit;
   }
 
   .header-actions {
@@ -169,7 +205,7 @@
   }
 
   .lang-toggle {
-    @apply inline-flex h-9 min-w-9 items-center justify-center rounded border border-white/20 bg-black/35 px-2 text-[12px] font-semibold tracking-[0.12em] text-white/80 hover:text-white;
+    @apply inline-flex h-9 min-w-9 items-center justify-center rounded border border-white/20 bg-black/35 px-2 text-[12px] font-semibold tracking-[0.12em] text-white/80 hover:border-white/45 hover:text-white active:scale-95;
   }
 
   .nav-links {
@@ -181,11 +217,11 @@
   }
 
   .resume-btn {
-    @apply rounded border border-white/30 px-3 py-2 text-[14px] font-semibold tracking-[0.18em];
+    @apply inline-flex items-center rounded border border-white/30 px-3 py-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-white hover:border-white/70 hover:bg-white/10 active:scale-[0.97];
   }
 
   .hero-content {
-    @apply relative z-10 flex w-auto max-w-[840px] flex-col justify-center ml-10 mr-auto md:ml-16;
+    @apply relative z-10 flex flex-col justify-center;
     min-height: calc(100vh - 82px);
     min-height: calc(100svh - 82px);
   }
@@ -198,7 +234,7 @@
     font-family: theme("fontFamily.display");
     @apply font-bold italic uppercase leading-[0.95] tracking-tight text-white;
     font-size: clamp(2.75rem, 14vw, 5rem);
-    text-wrap: balance;
+    max-width: 840px;
     text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
   }
 
@@ -215,7 +251,7 @@
   }
 
   .hero-icons a {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded border border-white/20 bg-black/35 text-[18px];
+    @apply inline-flex h-10 w-10 items-center justify-center rounded border border-white/20 bg-black/35 text-[18px] hover:border-white/50 hover:bg-white/10 hover:text-white active:scale-95;
   }
 
   .content-section {
@@ -233,7 +269,10 @@
 
   .section-title::before {
     content: "";
-    @apply h-px w-8 bg-white/40;
+    @apply h-px w-8 shrink-0 bg-white/40;
+    /* Sits on the first line's midline, also when the title wraps */
+    align-self: flex-start;
+    margin-top: calc(0.5lh - 0.5px);
   }
 
   .about-layout {
@@ -257,7 +296,7 @@
   }
 
   .connect-panel span {
-    @apply mb-1 block text-[13px] tracking-[0.2em] text-white/55;
+    @apply mb-1 block text-[12px] tracking-[0.2em] text-white/55;
   }
 
   .about-copy {
@@ -297,7 +336,7 @@
   }
 
   .view-link {
-    @apply mb-6 shrink-0 cursor-pointer border-0 bg-transparent text-[12px] tracking-[0.25em] text-white/70;
+    @apply mb-4 shrink-0 cursor-pointer rounded border-0 bg-transparent px-0 py-2 text-[12px] tracking-[0.25em] text-white/70 underline decoration-white/25 decoration-1 underline-offset-[6px] hover:text-white hover:decoration-white/70;
   }
 
   .project-grid {
@@ -306,6 +345,12 @@
 
   .project-card {
     @apply relative overflow-hidden rounded border border-white/10 bg-white/[0.03];
+    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project-card:hover,
+  .project-card:focus-within {
+    @apply border-white/30;
   }
 
   /* The title link's ::after covers the whole card, so the card stays
@@ -331,6 +376,11 @@
 
   .project-visual-image {
     @apply block h-full w-full object-cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project-card:hover .project-visual-image {
+    transform: scale(1.03);
   }
 
   .project-body {
@@ -350,7 +400,15 @@
   }
 
   .project-arrow {
-    @apply mt-4 inline-block text-lg text-white/90;
+    @apply mt-4 inline-block text-base text-white/60;
+    transition:
+      color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project-card:hover .project-arrow,
+  .project-card:focus-within .project-arrow {
+    @apply translate-x-1 text-white;
   }
 
   .all-projects-wrap {
@@ -362,7 +420,7 @@
   }
 
   .filter-chip {
-    @apply rounded border border-white/15 bg-white/[0.03] px-3 py-2 text-[12px] tracking-[0.16em] text-white/75;
+    @apply rounded border border-white/15 bg-white/[0.03] px-3 py-2 text-[12px] tracking-[0.16em] text-white/75 hover:border-white/35 hover:text-white active:scale-[0.97];
   }
 
   .filter-chip.active {
@@ -377,11 +435,16 @@
     @apply h-[180px];
   }
 
-  .fade-slide-enter-active,
+  .fade-slide-enter-active {
+    transition:
+      opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
   .fade-slide-leave-active {
     transition:
-      opacity 0.25s ease,
-      transform 0.25s ease;
+      opacity 0.15s ease-in,
+      transform 0.15s ease-in;
   }
 
   .fade-slide-enter-from,
@@ -390,8 +453,8 @@
     transform: translateY(8px);
   }
 
-  .connect-panel a:hover {
-    @apply text-white;
+  .connect-panel a {
+    @apply block text-white/85 hover:text-white;
   }
 
   .experience-layout {
@@ -412,7 +475,7 @@
   }
 
   .timeline-period {
-    @apply text-[12px] tracking-[0.2em] text-white/55;
+    @apply text-[12px] tabular-nums tracking-[0.2em] text-white/55;
   }
 
   .timeline-title {
@@ -436,7 +499,7 @@
   }
 
   .skill-group-title {
-    @apply mb-4 flex items-center gap-3 text-[12px] tracking-[0.3em] text-white/60;
+    @apply mb-4 flex items-center gap-3 text-[12px] uppercase tracking-[0.24em] text-white/60;
   }
 
   .skill-chips {
@@ -456,7 +519,7 @@
   }
 
   .contact-or {
-    @apply mt-6 text-[12px] tracking-[0.3em] text-white/60;
+    @apply mt-6 text-[12px] uppercase tracking-[0.24em] text-white/60;
   }
 
   .contact-links {
@@ -464,7 +527,11 @@
   }
 
   .contact-links a {
-    @apply inline-flex items-center gap-3 text-white/85 hover:text-white;
+    @apply inline-flex items-center gap-3 py-1 text-white/85 underline decoration-transparent underline-offset-4 hover:text-white hover:decoration-white/40;
+  }
+
+  .contact-links .icon {
+    @apply text-white/55;
   }
 
   .contact-form {
@@ -472,12 +539,12 @@
   }
 
   .contact-form label span {
-    @apply mb-2 block text-[12px] tracking-[0.2em] text-white/60;
+    @apply mb-2 block text-[12px] uppercase tracking-[0.2em] text-white/60;
   }
 
   .contact-form input,
   .contact-form textarea {
-    @apply w-full rounded border border-white/15 bg-base px-3 py-2.5 text-[15px] text-accent placeholder:text-white/40 focus:border-white/50;
+    @apply w-full rounded border border-white/15 bg-base px-3 py-2.5 text-[15px] text-accent placeholder:text-white/40 hover:border-white/30 focus:border-white/50;
   }
 
   .contact-form textarea {
@@ -490,7 +557,7 @@
   }
 
   .contact-submit {
-    @apply w-fit cursor-pointer bg-transparent hover:bg-white/10 disabled:cursor-wait disabled:opacity-60;
+    @apply w-fit cursor-pointer bg-transparent disabled:cursor-wait disabled:opacity-60 disabled:active:scale-100;
   }
 
   .contact-status {
@@ -502,7 +569,7 @@
   }
 
   .footer-brand {
-    @apply flex items-center gap-6;
+    @apply flex items-center gap-6 tabular-nums;
   }
 
   .footer-logo {
@@ -511,6 +578,10 @@
 
   .footer-line nav {
     @apply flex gap-6;
+  }
+
+  .footer-line nav a {
+    @apply py-1 hover:text-white;
   }
 
   @media (max-width: 768px) {

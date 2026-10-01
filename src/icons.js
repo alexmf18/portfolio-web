@@ -6,6 +6,7 @@ export {
   faLinkedinIn,
 } from "@fortawesome/free-brands-svg-icons";
 export {
+  faArrowRight,
   faBars,
   faBookOpen,
   faCode,

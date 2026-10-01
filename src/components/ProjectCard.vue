@@ -1,4 +1,6 @@
 <script setup>
+import BaseIcon from "./BaseIcon.vue";
+import { faArrowRight } from "../icons.js";
 import { t, tr } from "../i18n.js";
 
 defineProps({
@@ -32,7 +34,9 @@ defineProps({
         >
       </h3>
       <p>{{ tr(project.description) }}</p>
-      <span class="project-arrow" aria-hidden="true">→</span>
+      <span class="project-arrow" aria-hidden="true"
+        ><BaseIcon :icon="faArrowRight"
+      /></span>
     </div>
   </article>
 </template>
