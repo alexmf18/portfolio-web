@@ -18,8 +18,8 @@ export const navLinks = [
 ];
 
 export const cv = {
-  href: "/documents/CV_Alex_Morcillo.pdf",
-  filename: "CV_Alex_Morcillo.pdf",
+  href: "/documents/CV_Alex_Morcillo_Fulgencio.pdf",
+  filename: "CV_Alex_Morcillo_Fulgencio.pdf",
 };
 
 export const email = "alexmf188@gmail.com";
