@@ -15,7 +15,9 @@
   }
 
   html {
-    font-size: 16px;
+    /* 100%, not 16px: respect the reader's own text-size setting. Sizes
+       below are in rem so type and measure scale with it. */
+    font-size: 100%;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     /* Keep anchored sections clear of the fixed header (~68px tall) */
@@ -249,11 +251,11 @@
   }
 
   .brand {
-    @apply flex h-8 items-center text-[12px] font-semibold uppercase tracking-[0.2em];
+    @apply flex h-8 items-center text-[0.75rem] font-semibold uppercase tracking-[0.1em];
   }
 
   .brand-logo {
-    @apply block h-[18px] w-auto;
+    @apply block h-[1.125rem] w-auto;
   }
 
   .menu-toggle {
@@ -345,7 +347,7 @@
   }
 
   .lang-toggle {
-    @apply inline-flex h-9 min-w-9 items-center justify-center rounded border border-white/20 bg-black/35 px-2 text-[12px] font-semibold tracking-[0.12em] text-white/80 hover:border-white/45 hover:text-white active:scale-95;
+    @apply uppercase inline-flex h-9 min-w-9 items-center justify-center rounded border border-white/20 bg-black/35 px-2 text-[0.75rem] font-semibold tracking-[0.06em] text-white/80 hover:border-white/45 hover:text-white active:scale-95;
   }
 
   .nav-links {
@@ -392,19 +394,27 @@
   }
 
   .inline-chip {
-    @apply mb-7 inline-flex w-fit rounded-full border border-white/25 bg-black/40 px-4 py-2 text-[12px] font-semibold tracking-[0.16em] text-white/80;
+    @apply uppercase mb-7 inline-flex w-fit items-center gap-2.5 rounded-full border border-white/25 bg-black/40 px-4 py-2 text-[0.75rem] font-semibold tracking-[0.08em] text-white/80;
+  }
+
+  .inline-chip::before {
+    content: "";
+    @apply h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400;
+    box-shadow:
+      0 0 0 3px rgba(52, 211, 153, 0.18),
+      0 0 8px rgba(52, 211, 153, 0.6);
   }
 
   .hero-title {
     font-family: theme("fontFamily.display");
     @apply font-bold italic uppercase leading-[0.95] tracking-tight text-white;
     font-size: clamp(2.75rem, 14vw, 5rem);
-    max-width: 840px;
-    text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    max-width: 52.5rem;
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.3);
   }
 
   .hero-subtitle {
-    @apply mt-5 max-w-[620px] text-[20px] leading-[1.22] text-white/90;
+    @apply mt-5 max-w-[38.75rem] text-[1.25rem] leading-[1.4] text-white/90;
   }
 
   .hero-subtitle strong {
@@ -416,7 +426,7 @@
   }
 
   .hero-icons a {
-    @apply inline-flex h-10 w-10 items-center justify-center rounded border border-white/20 bg-black/35 text-[18px] hover:border-white/50 hover:bg-white/10 hover:text-white active:scale-95;
+    @apply inline-flex h-11 w-11 items-center justify-center rounded border border-white/20 bg-black/35 text-[1.125rem] hover:border-white/50 hover:bg-white/10 hover:text-white active:scale-95;
   }
 
   .content-section {
@@ -429,7 +439,7 @@
 
   .section-title {
     font-family: theme("fontFamily.display");
-    @apply mb-6 flex items-center gap-3 text-[36px] font-medium italic uppercase tracking-wide;
+    @apply mb-6 flex items-center gap-3 text-[2.25rem] font-medium italic uppercase leading-[1.05] tracking-[0.01em];
   }
 
   .section-title::before {
@@ -441,7 +451,7 @@
   }
 
   .about-layout {
-    @apply grid gap-8 lg:grid-cols-[290px_1fr];
+    @apply grid gap-8 lg:grid-cols-[18.125rem_1fr];
   }
 
   .connect-panel {
@@ -449,7 +459,7 @@
   }
 
   .connect-title {
-    @apply mb-4 text-[12px] tracking-[0.35em] text-white/60;
+    @apply uppercase mb-4 text-[0.75rem] tracking-[0.06em] text-white/60;
   }
 
   .connect-panel ul {
@@ -461,11 +471,11 @@
   }
 
   .connect-panel span {
-    @apply mb-1 block text-[12px] tracking-[0.2em] text-white/55;
+    @apply uppercase mb-1 block text-[0.75rem] tracking-[0.1em] text-white/55;
   }
 
   .about-copy {
-    @apply text-[18px] leading-8 text-white/85;
+    @apply text-[1.125rem] leading-[1.65] text-white/85;
   }
 
   .about-copy p + p {
@@ -477,7 +487,7 @@
   }
 
   .hobbies-title {
-    @apply mt-4 text-[13px] tracking-[0.35em] text-white/60;
+    @apply uppercase mt-4 text-[0.8125rem] tracking-[0.06em] text-white/60;
   }
 
   .hobbies-grid {
@@ -485,7 +495,7 @@
   }
 
   .hobbies-grid div {
-    @apply rounded-lg border border-white/10 bg-white/[0.03] px-4 py-5 text-center text-[12px] tracking-[0.18em] text-white/70;
+    @apply uppercase rounded-lg bg-white/[0.04] px-4 py-5 text-center text-[0.75rem] tracking-[0.08em] text-white/70;
   }
 
   .hobbies-grid span {
@@ -501,7 +511,7 @@
   }
 
   .view-link {
-    @apply mb-4 shrink-0 cursor-pointer rounded border-0 bg-transparent px-0 py-2 text-[12px] tracking-[0.25em] text-white/70 underline decoration-white/25 decoration-1 underline-offset-[6px] hover:text-white hover:decoration-white/70;
+    @apply uppercase mb-4 shrink-0 cursor-pointer rounded border-0 bg-transparent px-0 py-2 text-[0.75rem] tracking-[0.1em] text-white/70 underline decoration-white/25 decoration-1 underline-offset-[6px] hover:text-white hover:decoration-white/70 active:opacity-60;
   }
 
   .project-grid {
@@ -553,11 +563,11 @@
   }
 
   .project-body .meta {
-    @apply text-[12px] uppercase tracking-[0.14em] text-white/55;
+    @apply text-[0.75rem] uppercase tracking-[0.06em] text-white/55;
   }
 
   .project-body h3 {
-    @apply mt-2 text-[24px] font-light;
+    @apply mt-2 text-[1.5rem] font-light tracking-[-0.01em];
   }
 
   .project-body p {
@@ -585,7 +595,7 @@
   }
 
   .filter-chip {
-    @apply rounded border border-white/15 bg-white/[0.03] px-3 py-2 text-[12px] tracking-[0.16em] text-white/75 hover:border-white/35 hover:text-white active:scale-[0.97];
+    @apply rounded border border-white/15 bg-white/[0.03] px-3 py-2 text-[0.75rem] tracking-[0.08em] text-white/75 hover:border-white/35 hover:text-white active:scale-[0.97];
   }
 
   .filter-chip.active {
@@ -623,7 +633,7 @@
   }
 
   .experience-layout {
-    @apply grid gap-10 lg:grid-cols-[1fr_360px];
+    @apply grid gap-10 lg:grid-cols-[1fr_22.5rem];
   }
 
   .timeline {
@@ -640,19 +650,19 @@
   }
 
   .timeline-period {
-    @apply text-[12px] tabular-nums tracking-[0.2em] text-white/55;
+    @apply text-[0.75rem] tabular-nums tracking-[0.04em] text-white/55;
   }
 
   .timeline-title {
-    @apply mt-1 text-[22px] font-light text-white;
+    @apply mt-1 text-[1.375rem] font-light tracking-[-0.01em] text-white;
   }
 
   .timeline-org {
-    @apply text-[13px] font-semibold uppercase tracking-[0.18em] text-white/70;
+    @apply text-[0.8125rem] font-semibold uppercase tracking-[0.08em] text-white/70;
   }
 
   .timeline-tasks {
-    @apply mt-3 list-disc space-y-1.5 pl-5 text-[15px] leading-6 text-white/75 marker:text-white/35;
+    @apply mt-3 list-disc space-y-1.5 pl-5 text-[0.9375rem] leading-6 text-white/75 marker:text-white/35;
   }
 
   .skills-layout {
@@ -664,7 +674,7 @@
   }
 
   .skill-group-title {
-    @apply mb-4 flex items-center gap-3 text-[12px] uppercase tracking-[0.24em] text-white/60;
+    @apply mb-4 flex items-center gap-3 text-[0.75rem] uppercase tracking-[0.1em] text-white/60;
   }
 
   .skill-chips {
@@ -672,7 +682,7 @@
   }
 
   .skill-chips li {
-    @apply rounded border border-white/15 px-3 py-1.5 text-[13px] text-white/85;
+    @apply rounded bg-white/[0.06] px-3 py-1.5 text-[0.8125rem] text-white/85;
   }
 
   .contact-layout {
@@ -680,15 +690,15 @@
   }
 
   .contact-intro {
-    @apply text-[18px] leading-8 text-white/85;
+    @apply text-[1.125rem] leading-[1.65] text-white/85;
   }
 
   .contact-or {
-    @apply mt-6 text-[12px] uppercase tracking-[0.24em] text-white/60;
+    @apply mt-6 text-[0.75rem] uppercase tracking-[0.1em] text-white/60;
   }
 
   .contact-links {
-    @apply mt-3 space-y-3 text-[15px];
+    @apply mt-3 space-y-3 text-[0.9375rem];
   }
 
   .contact-links a {
@@ -704,12 +714,12 @@
   }
 
   .contact-form label span {
-    @apply mb-2 block text-[12px] uppercase tracking-[0.2em] text-white/60;
+    @apply mb-2 block text-[0.75rem] uppercase tracking-[0.1em] text-white/60;
   }
 
   .contact-form input,
   .contact-form textarea {
-    @apply w-full rounded border border-white/15 bg-base px-3 py-2.5 text-[15px] text-accent placeholder:text-white/40 hover:border-white/30 focus:border-white/50;
+    @apply w-full rounded border border-white/15 bg-base px-3 py-2.5 text-[0.9375rem] text-accent placeholder:text-white/40 hover:border-white/30 focus:border-white/50;
   }
 
   .contact-form textarea {
@@ -726,11 +736,11 @@
   }
 
   .contact-status {
-    @apply min-h-6 text-[14px] text-white/80;
+    @apply min-h-6 text-[0.875rem] text-white/80;
   }
 
   .footer-line {
-    @apply flex flex-col gap-4 py-4 text-[12px] tracking-[0.22em] text-white/65 md:flex-row md:items-center md:justify-between;
+    @apply uppercase flex flex-col gap-4 py-4 text-[0.75rem] tracking-[0.1em] text-white/65 md:flex-row md:items-center md:justify-between;
   }
 
   .footer-brand {
@@ -738,7 +748,7 @@
   }
 
   .footer-logo {
-    @apply block h-[14px] w-auto;
+    @apply block h-[0.875rem] w-auto;
   }
 
   .footer-line nav {
@@ -751,7 +761,7 @@
 
   @media (max-width: 768px) {
     .hero-subtitle {
-      font-size: 18px;
+      font-size: 1.125rem;
       line-height: 1.45;
     }
 

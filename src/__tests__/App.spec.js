@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import App from "../App.vue";
 
-// jsdom doesn't implement scrollIntoView, which the "VER TODOS" toggle uses
+// jsdom doesn't implement scrollIntoView, which the "Ver todos" toggle uses
 Element.prototype.scrollIntoView = () => {};
 
 describe("Portfolio page", () => {
@@ -247,7 +247,7 @@ describe("All projects", () => {
     await wrapper.find(".view-link").trigger("click");
 
     const filters = wrapper.findAll(".filter-chip").map((chip) => chip.text());
-    expect(filters).toEqual(["TODOS", "React", "JavaScript", "Vue.js"]);
+    expect(filters).toEqual(["Todos", "React", "JavaScript", "Vue.js"]);
 
     const cards = wrapper.findAll("#all-projects article");
     expect(cards).toHaveLength(7);

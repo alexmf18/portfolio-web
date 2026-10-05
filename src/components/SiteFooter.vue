@@ -27,7 +27,7 @@ const currentYear = new Date().getFullYear();
           target="_blank"
           rel="noopener noreferrer"
         >
-          {{ social.name.toUpperCase() }}
+          {{ social.name }}
         </a>
       </nav>
       <p>{{ t("footer.builtWith") }}</p>

@@ -26,7 +26,7 @@ const contactSocials = socialLinks.filter((social) => social.display);
           </li>
           <li v-for="social in contactSocials" :key="social.name">
             <a :href="social.href" target="_blank" rel="noopener noreferrer"
-              ><span>{{ social.name.toUpperCase() }}</span
+              ><span>{{ social.name }}</span
               >{{ social.display }}</a
             >
           </li>

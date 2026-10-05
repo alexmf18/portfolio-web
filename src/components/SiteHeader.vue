@@ -158,7 +158,7 @@ onBeforeUnmount(() => {
           :aria-label="t('header.switchLanguage')"
           @click="setLocale(otherLocale())"
         >
-          {{ otherLocale().toUpperCase() }}
+          {{ otherLocale() }}
         </button>
         <button
           ref="menuToggleRef"

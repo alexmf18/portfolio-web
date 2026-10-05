@@ -21,8 +21,8 @@ describe("Language toggle", () => {
     const wrapper = mount(App);
 
     expect(document.documentElement.lang).toBe("es");
-    expect(wrapper.find("#about h2").text()).toBe("SOBRE MÍ");
-    expect(wrapper.find(".lang-toggle").text()).toBe("EN");
+    expect(wrapper.find("#about h2").text()).toBe("Sobre mí");
+    expect(wrapper.find(".lang-toggle").text()).toBe("en");
   });
 
   it("switches the page to English, and back", async () => {
@@ -31,17 +31,17 @@ describe("Language toggle", () => {
 
     expect(locale.value).toBe("en");
     expect(document.documentElement.lang).toBe("en");
-    expect(wrapper.find("#about h2").text()).toBe("ABOUT ME");
+    expect(wrapper.find("#about h2").text()).toBe("About me");
     expect(wrapper.find("#portfolio").text()).toContain(
       projects[0].description.en,
     );
     expect(wrapper.find("#experience").text()).toContain(
       "Application Support Analyst",
     );
-    expect(wrapper.find(".lang-toggle").text()).toBe("ES");
+    expect(wrapper.find(".lang-toggle").text()).toBe("es");
 
     await wrapper.find(".lang-toggle").trigger("click");
-    expect(wrapper.find("#about h2").text()).toBe("SOBRE MÍ");
+    expect(wrapper.find("#about h2").text()).toBe("Sobre mí");
   });
 
   it("remembers the choice", () => {

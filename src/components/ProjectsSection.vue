@@ -4,7 +4,7 @@ import ProjectCard from "./ProjectCard.vue";
 import { projects } from "../data/projects.js";
 import { t } from "../i18n.js";
 
-// "all" is shown as TODOS / ALL; the other filters are project categories
+// "all" is shown as Todos / All; the other filters are project categories
 const ALL = "all";
 
 const featuredProjects = projects.slice(0, 2);

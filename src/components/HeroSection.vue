@@ -24,7 +24,7 @@ import { t } from "../i18n.js";
 
     <div class="hero-content section-wrapper">
       <div class="inline-chip">{{ t("hero.available") }}</div>
-      <h1 class="hero-title">ALEX MORCILLO FULGENCIO</h1>
+      <h1 class="hero-title">Alex Morcillo Fulgencio</h1>
       <p class="hero-subtitle">
         {{ t("hero.subtitleStart") }}
         <strong>{{ t("hero.subtitleStrong") }}</strong>
