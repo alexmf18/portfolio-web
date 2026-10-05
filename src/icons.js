@@ -9,6 +9,7 @@ export {
   faArrowRight,
   faBars,
   faBookOpen,
+  faCheck,
   faCode,
   faDatabase,
   faEnvelope,

@@ -81,8 +81,15 @@ const messages = {
         "Se ha abierto tu aplicación de correo con el mensaje preparado. Solo tienes que enviarlo.",
       subject: "Contacto desde el portfolio",
       or: "O escríbeme directamente:",
+      sentButton: "Enviado",
+      errors: {
+        nameRequired: "Dime cómo te llamas.",
+        emailRequired: "Necesito un email para poder responderte.",
+        emailInvalid: "Este email no parece válido (ej. nombre@dominio.com).",
+        messageRequired: "Escribe un mensaje antes de enviarlo.",
+      },
     },
-    footer: { builtWith: "CONSTRUIDO CON MINIMALISMO" },
+    footer: { builtWith: "Construido con minimalismo" },
   },
 
   en: {
@@ -160,8 +167,15 @@ const messages = {
         "Your email app has opened with the message ready. Just press send.",
       subject: "Message from your portfolio",
       or: "Or email me directly:",
+      sentButton: "Sent",
+      errors: {
+        nameRequired: "Please tell me your name.",
+        emailRequired: "I need an email address to reply to.",
+        emailInvalid: "This email doesn't look valid (e.g. name@domain.com).",
+        messageRequired: "Write a message before sending it.",
+      },
     },
-    footer: { builtWith: "BUILT WITH MINIMALISM" },
+    footer: { builtWith: "Built with minimalism" },
   },
 };
 

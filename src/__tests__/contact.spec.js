@@ -71,6 +71,7 @@ describe("Contact form", () => {
     });
     expect(wrapper.find('[role="status"]').text()).toContain("Gracias");
     expect(wrapper.find('input[name="name"]').element.value).toBe("");
+    expect(wrapper.find(".contact-submit").text()).toBe("Enviado");
   });
 
   it("shows an error with the direct email when sending fails", async () => {
@@ -84,5 +85,39 @@ describe("Contact form", () => {
       "alexmf188@gmail.com",
     );
     expect(wrapper.find('input[name="name"]').element.value).toBe("Ana");
+  });
+
+  it("flags every empty field and focuses the first instead of sending", async () => {
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    const wrapper = mount(ContactSection, { attachTo: document.body });
+
+    await wrapper.find("form").trigger("submit");
+
+    expect(open).not.toHaveBeenCalled();
+    expect(wrapper.findAll(".field-error")).toHaveLength(3);
+    const name = wrapper.find('input[name="name"]');
+    expect(name.attributes("aria-invalid")).toBe("true");
+    expect(name.attributes("aria-describedby")).toBe("contact-name-error");
+    expect(document.activeElement).toBe(name.element);
+    wrapper.unmount();
+  });
+
+  it("checks a field when it's left, and clears the error as it's fixed", async () => {
+    const wrapper = mount(ContactSection);
+    const emailInput = wrapper.find('input[name="email"]');
+
+    // Leaving an untouched empty field doesn't nag
+    await emailInput.trigger("blur");
+    expect(wrapper.find(".field-error").exists()).toBe(false);
+
+    await emailInput.setValue("ana@");
+    await emailInput.trigger("blur");
+    expect(wrapper.find("#contact-email-error").text()).toContain(
+      "no parece válido",
+    );
+
+    await emailInput.setValue("ana@example.com");
+    expect(wrapper.find("#contact-email-error").exists()).toBe(false);
+    expect(emailInput.attributes("aria-invalid")).toBe("false");
   });
 });
