@@ -1,11 +1,22 @@
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import BaseIcon from "./BaseIcon.vue";
 import { faBars, faXmark } from "../icons.js";
 import { cv, navLinks } from "../data/profile.js";
 import { locale, setLocale, t } from "../i18n.js";
 
 const otherLocale = () => (locale.value === "es" ? "en" : "es");
+
+// Every string changes at once, so the swap is a short cross-fade of the
+// page where the browser supports view transitions (instant elsewhere)
+const switchLocale = () => {
+  const next = otherLocale();
+  if (!document.startViewTransition) return setLocale(next);
+  document.startViewTransition(async () => {
+    setLocale(next);
+    await nextTick();
+  });
+};
 
 const mobileMenuOpen = ref(false);
 const headerRef = ref(null);
@@ -156,7 +167,7 @@ onBeforeUnmount(() => {
           class="lang-toggle"
           :lang="otherLocale()"
           :aria-label="t('header.switchLanguage')"
-          @click="setLocale(otherLocale())"
+          @click="switchLocale"
         >
           {{ otherLocale() }}
         </button>
