@@ -20,6 +20,10 @@
     text-size-adjust: 100%;
     /* Keep anchored sections clear of the fixed header (~68px tall) */
     scroll-padding-top: 5rem;
+    /* In-page links glide to their section (reduced motion turns this off) */
+    scroll-behavior: smooth;
+    /* The site is dark-only: native controls, autofill and scrollbars follow */
+    color-scheme: dark;
   }
 
   body {
@@ -168,8 +172,76 @@
       );
   }
 
+  /* Two layers behind the header: a scrim that keeps the nav legible over
+     the bright top of the hero photo, and a translucent material that
+     takes over once content scrolls underneath */
   .hero-header {
-    @apply fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-base;
+    @apply fixed left-0 top-0 z-50 w-full;
+    isolation: isolate;
+  }
+
+  .hero-header::before,
+  .hero-header::after {
+    content: "";
+    @apply pointer-events-none absolute inset-x-0 top-0;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Material: no hard divider, just a faint lit edge and a soft shadow */
+  .hero-header::before {
+    @apply bottom-0;
+    z-index: -1;
+    background: rgba(11, 13, 17, 0.94);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.07),
+      0 10px 24px -14px rgba(0, 0, 0, 0.7);
+    opacity: 0;
+  }
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .hero-header::before {
+      background: rgba(11, 13, 17, 0.7);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      backdrop-filter: blur(20px) saturate(160%);
+    }
+  }
+
+  /* Scrim: fades out below the header instead of ending in a line */
+  .hero-header::after {
+    z-index: -2;
+    height: calc(100% + 3rem);
+    background: linear-gradient(
+      180deg,
+      rgba(11, 13, 17, 0.8) 0%,
+      rgba(11, 13, 17, 0.55) 45%,
+      rgba(11, 13, 17, 0) 100%
+    );
+  }
+
+  .hero-header.is-solid::before {
+    opacity: 1;
+  }
+
+  .hero-header.is-solid::after {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .hero-header::before {
+      background: theme("colors.base");
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    .hero-header::before {
+      background: theme("colors.base");
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+      opacity: 1;
+    }
   }
 
   .hero-header-inner {
@@ -185,15 +257,83 @@
   }
 
   .menu-toggle {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded border border-white/20 bg-black/35 text-[18px] text-white/80 hover:border-white/45 hover:text-white active:scale-95 lg:hidden;
+    @apply inline-flex h-9 w-9 items-center justify-center rounded border border-white/20 bg-black/35 text-[1.125rem] text-white/80 hover:border-white/45 hover:text-white active:scale-95 lg:hidden;
   }
 
+  /* The menu grows down out of the header (0fr -> 1fr) and its contents
+     drift in from above, so it reads as part of the bar that opened it.
+     Closing runs the same path back with the mirrored curve. Plain CSS
+     transitions, so toggling mid-flight reverses from where it is. */
   .mobile-menu {
-    @apply flex flex-col gap-2 border-t border-white/10 px-3 py-5 text-[13px] font-medium tracking-[0.2em] text-white/80 lg:hidden;
+    @apply grid lg:hidden;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+      grid-template-rows 0.3s cubic-bezier(0.7, 0, 0.84, 0),
+      visibility 0s linear 0.3s;
   }
 
-  .mobile-menu > a:not(.resume-btn) {
-    @apply py-2 hover:text-white;
+  .mobile-menu.is-open {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition:
+      grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s;
+  }
+
+  .mobile-menu-clip {
+    @apply min-h-0 overflow-hidden;
+  }
+
+  .mobile-menu-content {
+    @apply uppercase flex flex-col gap-2 border-t border-white/10 px-3 py-5 text-[0.8125rem] font-medium tracking-[0.1em] text-white/90;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.2s cubic-bezier(0.7, 0, 0.84, 0),
+      transform 0.3s cubic-bezier(0.7, 0, 0.84, 0);
+  }
+
+  .mobile-menu.is-open .mobile-menu-content {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.05s,
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mobile-menu-content > a:not(.resume-btn) {
+    @apply flex items-center gap-3 py-2 text-white/70 hover:text-white active:opacity-60;
+  }
+
+  /* Current section: same short rule the section titles open with */
+  .mobile-menu-content > a::before {
+    content: "";
+    @apply h-px w-0 bg-white;
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mobile-menu-content > a[aria-current]::before {
+    @apply w-4;
+  }
+
+  .mobile-menu-content > a[aria-current] {
+    @apply text-white;
+  }
+
+  /* Dims the page while the menu is open; tapping it closes the menu */
+  .menu-scrim {
+    @apply pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 lg:hidden;
+    transition: opacity 0.3s cubic-bezier(0.7, 0, 0.84, 0);
+  }
+
+  .menu-scrim.is-open {
+    @apply pointer-events-auto opacity-100;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html.menu-open {
+    overflow: hidden;
   }
 
   .mobile-menu .resume-btn {
@@ -209,15 +349,40 @@
   }
 
   .nav-links {
-    @apply hidden items-center gap-8 text-[12px] font-medium tracking-[0.2em] text-white/80 lg:flex;
+    @apply uppercase hidden items-center gap-8 text-[0.75rem] font-medium tracking-[0.1em] text-white/90 lg:flex;
   }
 
-  .nav-links a:hover {
+  .nav-links a:not(.resume-btn) {
+    @apply relative py-1 text-white/65 active:opacity-60;
+  }
+
+  /* Current section: full-strength text and a rule that grows from the
+     centre underneath, so moving between sections reads as one marker */
+  .nav-links a:not(.resume-btn)::after {
+    content: "";
+    @apply absolute inset-x-0 -bottom-1 h-px bg-white;
+    transform: scaleX(0);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-links a[aria-current] {
     @apply text-white;
   }
 
+  .nav-links a[aria-current]::after {
+    transform: scaleX(1);
+  }
+
+  /* Hand-written :hover rules sit behind the same check Tailwind's hover:
+     uses (hoverOnlyWhenSupported), so taps don't leave them stuck */
+  @media (hover: hover) and (pointer: fine) {
+    .nav-links a:not(.resume-btn):hover {
+      @apply text-white;
+    }
+  }
+
   .resume-btn {
-    @apply inline-flex items-center rounded border border-white/30 px-3 py-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-white hover:border-white/70 hover:bg-white/10 active:scale-[0.97];
+    @apply inline-flex items-center rounded border border-white/30 px-3 py-2 text-[0.75rem] font-semibold uppercase tracking-[0.08em] text-white hover:border-white/70 hover:bg-white/10 active:scale-[0.97];
   }
 
   .hero-content {

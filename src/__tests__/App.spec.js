@@ -52,6 +52,8 @@ describe("Portfolio page", () => {
     Element.prototype.scrollIntoView = (options) => calls.push(options);
     window.matchMedia = (query) => ({
       matches: query === "(prefers-reduced-motion: reduce)",
+      addEventListener() {},
+      removeEventListener() {},
     });
 
     const wrapper = mount(App);
@@ -93,6 +95,76 @@ describe("Content", () => {
   });
 });
 
+describe("Header material", () => {
+  const scrollTo = (y) => {
+    window.scrollY = y;
+    window.dispatchEvent(new Event("scroll"));
+  };
+
+  afterEach(() => (window.scrollY = 0));
+
+  it("turns solid once the page scrolls or the menu opens", async () => {
+    const wrapper = mount(App, { attachTo: document.body });
+    const header = () => wrapper.find(".hero-header");
+
+    expect(header().classes()).not.toContain("is-solid");
+
+    scrollTo(200);
+    await wrapper.vm.$nextTick();
+    expect(header().classes()).toContain("is-solid");
+
+    scrollTo(0);
+    await wrapper.vm.$nextTick();
+    expect(header().classes()).not.toContain("is-solid");
+
+    await wrapper.find(".menu-toggle").trigger("click");
+    expect(header().classes()).toContain("is-solid");
+
+    wrapper.unmount();
+  });
+});
+
+describe("Section wayfinding", () => {
+  afterEach(() => delete window.IntersectionObserver);
+
+  it("marks the nav link of the section being read", async () => {
+    let report;
+    window.IntersectionObserver = class {
+      constructor(callback) {
+        report = callback;
+      }
+      observe() {}
+      disconnect() {}
+    };
+    const wrapper = mount(App, { attachTo: document.body });
+    const current = () =>
+      wrapper
+        .findAll(".nav-links a[aria-current]")
+        .map((link) => link.attributes("href"));
+
+    expect(current()).toEqual([]);
+
+    const section = (id, isIntersecting) => ({
+      target: document.getElementById(id),
+      isIntersecting,
+    });
+    report([section("experience", true)]);
+    await wrapper.vm.$nextTick();
+    expect(current()).toEqual(["#experience"]);
+    expect(
+      wrapper
+        .find('#mobile-menu a[href="#experience"]')
+        .attributes("aria-current"),
+    ).toBe("location");
+
+    report([section("experience", false)]);
+    await wrapper.vm.$nextTick();
+    expect(current()).toEqual([]);
+
+    wrapper.unmount();
+  });
+});
+
 describe("Mobile menu", () => {
   let wrapper;
 
@@ -123,6 +195,24 @@ describe("Mobile menu", () => {
     await wrapper.vm.$nextTick();
 
     expect(isOpen()).toBe(false);
+  });
+
+  it("locks page scroll only while open", async () => {
+    const root = document.documentElement;
+    expect(root.classList.contains("menu-open")).toBe(true);
+
+    await wrapper.find(".menu-toggle").trigger("click");
+
+    expect(root.classList.contains("menu-open")).toBe(false);
+  });
+
+  it("keeps the closed menu out of reach", async () => {
+    const menu = wrapper.find("#mobile-menu");
+    expect(menu.attributes("inert")).toBeUndefined();
+
+    await wrapper.find(".menu-toggle").trigger("click");
+
+    expect(menu.attributes("inert")).toBeDefined();
   });
 
   it("stays open when tapping inside the menu", async () => {
