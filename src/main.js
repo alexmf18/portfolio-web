@@ -9,4 +9,7 @@ import "@fontsource/barlow-condensed/700-italic.css";
 import "./style.css";
 import App from "./App.vue";
 
+// iOS Safari only applies :active on touch when the page listens for touches
+document.addEventListener("touchstart", () => {}, { passive: true });
+
 createApp(App).mount("#app");

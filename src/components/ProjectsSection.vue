@@ -13,11 +13,15 @@ const projectFilters = [
   ...new Set(projects.map((project) => project.category)),
 ];
 const showAllProjects = ref(false);
+// The list is only built the first time it's opened (its images are lazy),
+// then kept so closing and reopening are reversible CSS transitions
+const hasOpened = ref(false);
 const selectedFilter = ref(ALL);
 const allProjectsWrapRef = ref(null);
 
 const toggleAllProjects = async () => {
   showAllProjects.value = !showAllProjects.value;
+  hasOpened.value = true;
 
   if (showAllProjects.value) {
     await nextTick();
@@ -30,6 +34,19 @@ const toggleAllProjects = async () => {
       block: "start",
     });
   }
+};
+
+// A leaving card is lifted out of the grid flow where it stands, so the
+// remaining cards can glide into their new places while it fades
+const pinLeavingCard = (el) => {
+  const { offsetLeft, offsetTop, offsetWidth, offsetHeight } = el;
+  Object.assign(el.style, {
+    position: "absolute",
+    left: `${offsetLeft}px`,
+    top: `${offsetTop}px`,
+    width: `${offsetWidth}px`,
+    height: `${offsetHeight}px`,
+  });
 };
 
 const filteredProjects = computed(() =>
@@ -64,36 +81,44 @@ const filteredProjects = computed(() =>
       />
     </div>
 
-    <transition name="fade-slide">
-      <div
-        v-if="showAllProjects"
-        id="all-projects"
-        ref="allProjectsWrapRef"
-        class="all-projects-wrap"
-      >
-        <div class="project-filters">
-          <button
-            v-for="filter in projectFilters"
-            :key="filter"
-            type="button"
-            class="filter-chip"
-            :class="{ active: selectedFilter === filter }"
-            :aria-pressed="selectedFilter === filter"
-            @click="selectedFilter = filter"
-          >
-            {{ filter === ALL ? t("projects.all") : filter }}
-          </button>
-        </div>
+    <div
+      id="all-projects"
+      ref="allProjectsWrapRef"
+      class="all-projects"
+      :class="{ 'is-open': showAllProjects }"
+      :inert="!showAllProjects || undefined"
+    >
+      <div class="all-projects-clip">
+        <div v-if="hasOpened" class="all-projects-wrap">
+          <div class="project-filters">
+            <button
+              v-for="filter in projectFilters"
+              :key="filter"
+              type="button"
+              class="filter-chip"
+              :class="{ active: selectedFilter === filter }"
+              :aria-pressed="selectedFilter === filter"
+              @click="selectedFilter = filter"
+            >
+              {{ filter === ALL ? t("projects.all") : filter }}
+            </button>
+          </div>
 
-        <div class="all-projects-grid">
-          <ProjectCard
-            v-for="project in filteredProjects"
-            :key="project.id"
-            :project="project"
-            compact
-          />
+          <TransitionGroup
+            tag="div"
+            name="card"
+            class="all-projects-grid"
+            @before-leave="pinLeavingCard"
+          >
+            <ProjectCard
+              v-for="project in filteredProjects"
+              :key="project.id"
+              :project="project"
+              compact
+            />
+          </TransitionGroup>
         </div>
       </div>
-    </transition>
+    </div>
   </section>
 </template>

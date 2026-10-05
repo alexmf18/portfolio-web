@@ -242,6 +242,22 @@ describe("All projects", () => {
     expect(chips[1].attributes("aria-pressed")).toBe("true");
   });
 
+  it("keeps the closed list out of reach without dropping it", async () => {
+    const wrapper = mount(App);
+    const toggle = wrapper.find(".view-link");
+    const list = () => wrapper.find("#all-projects");
+
+    expect(list().attributes("inert")).toBeDefined();
+    expect(list().findAll("article")).toHaveLength(0);
+
+    await toggle.trigger("click");
+    expect(list().attributes("inert")).toBeUndefined();
+
+    await toggle.trigger("click");
+    expect(list().attributes("inert")).toBeDefined();
+    expect(list().findAll("article")).toHaveLength(7);
+  });
+
   it("builds one filter per category and shows an image on every card", async () => {
     const wrapper = mount(App);
     await wrapper.find(".view-link").trigger("click");

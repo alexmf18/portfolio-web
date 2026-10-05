@@ -75,6 +75,16 @@
       transform;
     transition-duration: 0.2s;
     transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    /* No double-tap-to-zoom wait on taps; we draw our own press state */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Press feedback lands at once; letting go eases back with the 0.2s above
+     (a transition takes its timing from the state it's moving into) */
+  a:active,
+  button:active {
+    transition-duration: 0.06s;
   }
 
   /* Visible keyboard focus everywhere (mouse clicks don't trigger it) */
@@ -520,12 +530,25 @@
 
   .project-card {
     @apply relative overflow-hidden rounded border border-white/10 bg-white/[0.03];
-    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .project-card:hover,
+  /* The whole card is the link, so the whole card answers the press */
+  .project-card:active {
+    transform: scale(0.985);
+    transition-duration: 0.06s;
+  }
+
   .project-card:focus-within {
     @apply border-white/30;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .project-card:hover {
+      @apply border-white/30;
+    }
   }
 
   /* The title link's ::after covers the whole card, so the card stays
@@ -554,8 +577,10 @@
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .project-card:hover .project-visual-image {
-    transform: scale(1.03);
+  @media (hover: hover) and (pointer: fine) {
+    .project-card:hover .project-visual-image {
+      transform: scale(1.03);
+    }
   }
 
   .project-body {
@@ -581,13 +606,55 @@
       transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .project-card:hover .project-arrow,
   .project-card:focus-within .project-arrow {
     @apply translate-x-1 text-white;
   }
 
+  @media (hover: hover) and (pointer: fine) {
+    .project-card:hover .project-arrow {
+      @apply translate-x-1 text-white;
+    }
+  }
+
+  /* Opens like the mobile menu: grows down from the "View all" row while
+     its contents drift in, and closes back along the same path with the
+     mirrored curve. CSS transitions, so a second click reverses mid-way. */
+  .all-projects {
+    @apply grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+      grid-template-rows 0.35s cubic-bezier(0.7, 0, 0.84, 0),
+      visibility 0s linear 0.35s;
+  }
+
+  .all-projects.is-open {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition:
+      grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s;
+  }
+
+  .all-projects-clip {
+    @apply min-h-0 overflow-hidden;
+  }
+
   .all-projects-wrap {
     @apply mt-8 border-t border-white/10 pt-8;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.25s cubic-bezier(0.7, 0, 0.84, 0),
+      transform 0.35s cubic-bezier(0.7, 0, 0.84, 0);
+  }
+
+  .all-projects.is-open .all-projects-wrap {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s,
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .project-filters {
@@ -603,33 +670,40 @@
   }
 
   .all-projects-grid {
-    @apply grid gap-5 md:grid-cols-2;
+    @apply relative grid gap-5 md:grid-cols-2;
+  }
+
+  /* Filtering: cards that stay glide to their new slot (FLIP), new ones
+     settle in from slightly smaller, leaving ones shrink back the same way */
+  .card-move {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .card-enter-active {
+    transition:
+      opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
+      transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+  }
+
+  .card-leave-active {
+    @apply pointer-events-none;
+    transition:
+      opacity 0.2s cubic-bezier(0.7, 0, 0.84, 0),
+      transform 0.2s cubic-bezier(0.7, 0, 0.84, 0);
+  }
+
+  .card-enter-from,
+  .card-leave-to {
+    opacity: 0;
+    transform: scale(0.96);
   }
 
   .project-visual.compact {
     @apply h-[180px];
   }
 
-  .fade-slide-enter-active {
-    transition:
-      opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .fade-slide-leave-active {
-    transition:
-      opacity 0.15s ease-in,
-      transform 0.15s ease-in;
-  }
-
-  .fade-slide-enter-from,
-  .fade-slide-leave-to {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
   .connect-panel a {
-    @apply block text-white/85 hover:text-white;
+    @apply block text-white/85 hover:text-white active:opacity-60;
   }
 
   .experience-layout {
@@ -702,7 +776,7 @@
   }
 
   .contact-links a {
-    @apply inline-flex items-center gap-3 py-1 text-white/85 underline decoration-transparent underline-offset-4 hover:text-white hover:decoration-white/40;
+    @apply inline-flex items-center gap-3 py-1 text-white/85 underline decoration-transparent underline-offset-4 hover:text-white hover:decoration-white/40 active:opacity-60;
   }
 
   .contact-links .icon {
@@ -756,7 +830,7 @@
   }
 
   .footer-line nav a {
-    @apply py-1 hover:text-white;
+    @apply py-1 hover:text-white active:opacity-60;
   }
 
   @media (max-width: 768px) {
