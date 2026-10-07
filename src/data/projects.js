@@ -93,4 +93,17 @@ export const projects = [
     img: "/images/planetarium.webp",
     imgHeight: 569,
   },
+  {
+    id: 8,
+    category: "React",
+    stack: ["React", "Tailwind"],
+    title: "Nihongo Teacher",
+    description: {
+      es: "Aplicación para repasar japonés, con tablas de kana, kanji y gramática, ejercicios de práctica y seguimiento del progreso.",
+      en: "Japanese review app for students, with kana, kanji and grammar tables, practice exercises and progress tracking.",
+    },
+    url: "https://nihongo-teacher.vercel.app/",
+    img: "/images/nihongo.webp",
+    imgHeight: 560,
+  },
 ];

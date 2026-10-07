@@ -255,7 +255,7 @@ describe("All projects", () => {
 
     await toggle.trigger("click");
     expect(list().attributes("inert")).toBeDefined();
-    expect(list().findAll("article")).toHaveLength(7);
+    expect(list().findAll("article")).toHaveLength(8);
   });
 
   it("builds one filter per category and shows an image on every card", async () => {
@@ -266,7 +266,7 @@ describe("All projects", () => {
     expect(filters).toEqual(["Todos", "React", "JavaScript", "Vue.js"]);
 
     const cards = wrapper.findAll("#all-projects article");
-    expect(cards).toHaveLength(7);
+    expect(cards).toHaveLength(8);
     for (const card of cards) {
       expect(card.find("img").attributes("src")).toMatch(/\.webp$/);
     }
