@@ -5,6 +5,20 @@
 // The first two entries are the featured ones.
 export const projects = [
   {
+    id: 10,
+    category: "Data",
+    stack: ["PostgreSQL", "React", "Leaflet", "Tailwind"],
+    title: "Barcelona Incidents",
+    description: {
+      es: "Análisis de las incidencias ciudadanas de Barcelona (Open Data BCN): qué problemas se repiten, en qué barrios y cuánto tardan en resolverse. Mapa interactivo y métricas de tiempo de resolución calculadas en SQL.",
+      en: "Analysis of Barcelona's citizen incident reports (Open Data BCN): which problems keep recurring, in which neighbourhoods, and how long they take to be resolved. Interactive map and resolution-time metrics computed in SQL.",
+    },
+    url: "https://alexmf18.github.io/barcelona-incidents/",
+    repo: "https://github.com/alexmf18/barcelona-incidents",
+    img: "/images/barcelona-incidents.webp",
+    imgHeight: 567,
+  },
+  {
     id: 9,
     category: "Data",
     stack: ["SQL", "DuckDB", "React", "Tailwind", "Recharts"],
