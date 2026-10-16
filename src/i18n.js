@@ -63,6 +63,7 @@ const messages = {
       viewLess: "Ver menos",
       all: "Todos",
       imageAlt: "Imagen del proyecto",
+      code: "Código",
     },
     skills: { title: "Habilidades" },
     contact: {
@@ -149,6 +150,7 @@ const messages = {
       viewLess: "View less",
       all: "All",
       imageAlt: "Screenshot of",
+      code: "Code",
     },
     skills: { title: "Skills" },
     contact: {

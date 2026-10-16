@@ -40,7 +40,7 @@ describe("Portfolio page", () => {
       expect(name.trim()).not.toBe("");
     }
     for (const card of wrapper.findAll(".project-card")) {
-      const links = card.findAll("a");
+      const links = card.findAll("a:not(.project-repo-link)");
       expect(links).toHaveLength(1);
       expect(links[0].text()).toContain(card.find("h3").text().split(" (")[0]);
     }
@@ -255,7 +255,7 @@ describe("All projects", () => {
 
     await toggle.trigger("click");
     expect(list().attributes("inert")).toBeDefined();
-    expect(list().findAll("article")).toHaveLength(8);
+    expect(list().findAll("article")).toHaveLength(9);
   });
 
   it("builds one filter per category and shows an image on every card", async () => {
@@ -263,15 +263,15 @@ describe("All projects", () => {
     await wrapper.find(".view-link").trigger("click");
 
     const filters = wrapper.findAll(".filter-chip").map((chip) => chip.text());
-    expect(filters).toEqual(["Todos", "React", "JavaScript", "Vue.js"]);
+    expect(filters).toEqual(["Todos", "Data", "React", "JavaScript", "Vue.js"]);
 
     const cards = wrapper.findAll("#all-projects article");
-    expect(cards).toHaveLength(8);
+    expect(cards).toHaveLength(9);
     for (const card of cards) {
       expect(card.find("img").attributes("src")).toMatch(/\.webp$/);
     }
 
-    await wrapper.findAll(".filter-chip")[3].trigger("click");
+    await wrapper.findAll(".filter-chip")[4].trigger("click");
     expect(wrapper.findAll("#all-projects article")).toHaveLength(1);
   });
 });

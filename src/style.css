@@ -638,11 +638,20 @@
     @apply mt-2 text-sm text-white/75;
   }
 
+  .project-footer {
+    @apply mt-4 flex items-center justify-between;
+  }
+
   .project-arrow {
-    @apply mt-4 inline-block text-base text-white/60;
+    @apply inline-block text-base text-white/60;
     transition:
       color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
       transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Sits above the title link's full-card ::after so it stays clickable */
+  .project-repo-link {
+    @apply relative z-20 inline-flex items-center gap-2 text-[0.75rem] uppercase tracking-[0.06em] text-white/60 transition-colors hover:text-white focus-visible:text-white;
   }
 
   .project-card:focus-within .project-arrow {

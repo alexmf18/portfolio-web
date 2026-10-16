@@ -1,7 +1,23 @@
 // `category` drives the filters; `stack` is what each repo actually uses.
 // `description` is an { es, en } pair (see tr() in src/i18n.js).
 // Images are 1200px wide; `imgHeight` is set so the browser can reserve space.
+// `repo` is optional and adds a GitHub link to the card.
+// The first two entries are the featured ones.
 export const projects = [
+  {
+    id: 9,
+    category: "Data",
+    stack: ["SQL", "DuckDB", "React", "Tailwind", "Recharts"],
+    title: "Returns Ledger",
+    description: {
+      es: "Dashboard interactivo que analiza más de 1M de transacciones de un e-commerce para encontrar qué productos, países y meses concentran las devoluciones. Cada gráfico muestra la consulta SQL (CTEs, window functions) que lo genera.",
+      en: "Interactive dashboard that analyses over 1M e-commerce transactions to find which products, countries and months concentrate returns. Every chart shows the SQL query (CTEs, window functions) behind it.",
+    },
+    url: "https://returns-ledger.vercel.app/",
+    repo: "https://github.com/alexmf18/returns-ledger",
+    img: "/images/returns-ledger.webp",
+    imgHeight: 567,
+  },
   {
     id: 1,
     category: "React",

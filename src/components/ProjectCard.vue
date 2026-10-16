@@ -1,6 +1,6 @@
 <script setup>
 import BaseIcon from "./BaseIcon.vue";
-import { faArrowRight } from "../icons.js";
+import { faArrowRight, faGithub } from "../icons.js";
 import { t, tr } from "../i18n.js";
 
 defineProps({
@@ -34,9 +34,20 @@ defineProps({
         >
       </h3>
       <p>{{ tr(project.description) }}</p>
-      <span class="project-arrow" aria-hidden="true"
-        ><BaseIcon :icon="faArrowRight"
-      /></span>
+      <div class="project-footer">
+        <span class="project-arrow" aria-hidden="true"
+          ><BaseIcon :icon="faArrowRight"
+        /></span>
+        <a
+          v-if="project.repo"
+          :href="project.repo"
+          class="project-repo-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><BaseIcon :icon="faGithub" /> {{ t("projects.code")
+          }}<span class="sr-only"> {{ t("common.opensInNewTab") }}</span></a
+        >
+      </div>
     </div>
   </article>
 </template>

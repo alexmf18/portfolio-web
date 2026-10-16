@@ -41,6 +41,22 @@ describe("ProjectCard", () => {
     });
   });
 
+  it("links to the repo only when the project has one", () => {
+    const withRepo = projects.find((p) => p.repo);
+    const withoutRepo = projects.find((p) => !p.repo);
+
+    expect(
+      mount(ProjectCard, { props: { project: withRepo } })
+        .find(".project-repo-link")
+        .attributes(),
+    ).toMatchObject({ href: withRepo.repo, target: "_blank" });
+    expect(
+      mount(ProjectCard, { props: { project: withoutRepo } })
+        .find(".project-repo-link")
+        .exists(),
+    ).toBe(false);
+  });
+
   it("adds the compact modifier only when asked", () => {
     const regular = mount(ProjectCard, { props: { project } });
     const compact = mount(ProjectCard, { props: { project, compact: true } });
